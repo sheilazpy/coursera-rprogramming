@@ -27,6 +27,7 @@ best <- function(state, outcome) {
 	entry <- which(dataVector == minValues[state] & hospitalData$State == state)
 
 	## 4.
-	return(hospitalData[entry,2])
+	result = hospitalData[entry,2]
+	return(sort(result))
 
 }
