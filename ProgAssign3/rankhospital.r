@@ -18,10 +18,20 @@ rankhospital <- function(state, outcome, num = "best") {
 	if (outcome == Outcomes[1]) subData <- subset(Data, State == state, select = c(2,11))
 	if (outcome == Outcomes[2]) subData <- subset(Data, State == state, select = c(2,17))	
 	if (outcome == Outcomes[3]) subData <- subset(Data, State == state, select = c(2,23))
-  
-  	## 2. Second, order the subData table in descending order
-	subDataOrdered <- subData[order(subData[,2], subData[,1], na.last = TRUE, decreasing = TRUE)]
 
-	return(subDataOrdered)
+  	##2. Second, order the subData table in descending order
+	subDataOrdered <- subData[order(as.numeric(subData[,2]), subData[,1], decreasing = c(F, F), na.last = TRUE),]
+	
+	##3. Subset "subDataOrdered"-entries with !na results
+	subDataOrdered <- subset(subDataOrdered, !is.na(as.numeric(subDataOrdered[,2])))
+
+	##4. Result Conditioning
+	if (num == "best") num = as.integer(1)
+	if (num == "worst") num = as.integer(dim(subDataOrdered)[1])	
+
+	##5. Return Result
+	if (as.integer(num) > dim(subData)[1]) return(NA)
+
+	return(subDataOrdered[as.integer(num),1])
 
 }
