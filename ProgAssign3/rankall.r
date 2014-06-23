@@ -9,7 +9,7 @@ rankall <- function(outcome, num = "best") {
 	matchOut <- match(outcome, out, nomatch = 0)
 	if (matchOut == 0) stop("invalid outcome")
 
-	## Subset the data depending on state and outcome
+	## Subset the data depending on outcome
 	if (outcome == out[1]) sData <- subset(Data, select = c(2,7,11))
 	if (outcome == out[2]) sData <- subset(Data, select = c(2,7,17))	
 	if (outcome == out[3]) sData <- subset(Data, select = c(2,7,23))	
