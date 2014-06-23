@@ -1,24 +1,27 @@
 rankhospital <- function(state, outcome, num = "best") {
 	
 	## Read outcome data
-	hospitalData <- read.csv("outcome-of-care-measures.csv",
+	Data <- read.csv("outcome-of-care-measures.csv",
 		colClasses = "character")
 
 	## State Validation
-	matchState <- match(state, hospitalData$State, nomatch = 0)
+	matchState <- match(state, Data$State, nomatch = 0)
 	if (matchState == 0) stop("invalid state")
 
 	## Outcome Validation
-	validOutcomes <- c("heart attack", "heart failure", "pneumonia")
-	matchOutcome <- match(outcome, validOutcomes, nomatch = 0)
+	Outcomes <- c("heart attack", "heart failure", "pneumonia")
+	matchOutcome <- match(outcome, Outcomes, nomatch = 0)
 	if (matchOutcome == 0) stop("invalid outcome")
 
 	## Return hospital name in that state with lowest 30-day death rate
-	## 1. First, select appropiate column depending on outcome
-	if (outcome == validOutcomes[1]) col <- as.integer(11) 	
-	if (outcome == validOutcomes[2]) col <- as.integer(17)	
-	if (outcome == validOutcomes[3]) col <- as.integer(23)
+	## 1. First, subset the data depending on state and outcome
+	if (outcome == Outcomes[1]) subData <- subset(Data, State == state, select = c(2,11))
+	if (outcome == Outcomes[2]) subData <- subset(Data, State == state, select = c(2,17))	
+	if (outcome == Outcomes[3]) subData <- subset(Data, State == state, select = c(2,23))
+  
+  	## 2. Second, order the subData table in descending order
+	subDataOrdered <- subData[order(subData[,2], subData[,1], na.last = TRUE, decreasing = TRUE)]
 
-	
+	return(subDataOrdered)
 
 }
